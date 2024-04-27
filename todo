@@ -1,0 +1,40 @@
+- 회원가입 / 로그인 users
+    - first name
+    - last name
+    - avatar
+    - name
+    - is poster
+- 영화 카테고리 movies
+    - 영화 이름
+    - 리뷰 제목
+    - 감독 (필수x)
+    - 주연 (필수x)
+    - 내용
+    - 요약된 결과
+    - 생성된 이미지
+    - 공유 여부
+    - user (FK)
+
+- 책 카테고리 books
+    - 리뷰 제목 review_title
+    - 책 제목 title
+    - 작가
+    - 출판사 (필수x)
+    - 내용
+    - 요약된 결과
+    - 생성된 이미지
+    - 공유 여부
+    - user (FK)
+
+- Common (공통으로 씀)
+    - created_at
+    - updated_at
+
+- chatgpt요약
+- 이미지생성
+- medias
+    - photo
+    - video
+
+
+# view.py => 유저가 특정 url에 접근할때 작동하는 함수

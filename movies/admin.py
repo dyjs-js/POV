@@ -10,8 +10,19 @@ class MovieAdmin(admin.ModelAdmin):
         "title",
         "director",
         "cast",
+        "user",
         "is_public",
+        "created_at",
+        "updated_at",
     )
-    search_fields = ("title",)
+    search_fields = (
+        "title",
+        "director",
+        "user__username",
+    )
     list_filter = ("is_public",)
     list_editable = ("is_public",)
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
