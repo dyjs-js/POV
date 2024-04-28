@@ -1,10 +1,11 @@
-- 회원가입 / 로그인 users
+- 회원가입 / 로그인 users [v]
     - first name
     - last name
     - avatar
     - name
     - is poster
-- 영화 카테고리 movies
+
+- 영화 카테고리 movies [v]
     - 영화 이름
     - 리뷰 제목
     - 감독 (필수x)
@@ -15,7 +16,7 @@
     - 공유 여부
     - user (FK)
 
-- 책 카테고리 books
+- 책 카테고리 books [v]
     - 리뷰 제목 review_title
     - 책 제목 title
     - 작가
@@ -26,15 +27,29 @@
     - 공유 여부
     - user (FK)
 
-- Common (공통으로 씀)
+- Common (공통으로 씀) [v]
     - created_at
     - updated_at
-
-- chatgpt요약
-- 이미지생성
-- medias
+    
+- medias [v]
     - photo
     - video
 
 
+- liked
+    - name 
+    - books (manytomany)
+    - movies (manytomany)
+    - user FK
+
+- chatgpt요약
+- 이미지생성
+
+
+
 # view.py => 유저가 특정 url에 접근할때 작동하는 함수
+4월까지 기본 app api까지 완료
+5월부터 프론트 시작하면서 기타 기능 추가하기
+
+
+"api를 사용 하는 이유
