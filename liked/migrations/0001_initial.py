@@ -6,11 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     initial = True
 
-    dependencies = []
+    dependencies = [
+        ("books", "0001_initial"),
+    ]
 
     operations = [
         migrations.CreateModel(
-            name="Movie",
+            name="Liked",
             fields=[
                 (
                     "id",
@@ -23,20 +25,10 @@ class Migration(migrations.Migration):
                 ),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 ("updated_at", models.DateTimeField(auto_now=True)),
-                ("review_title", models.CharField(max_length=100)),
-                ("title", models.CharField(max_length=100)),
-                ("director", models.CharField(blank=True, max_length=100)),
-                ("cast", models.CharField(blank=True, max_length=200)),
-                ("content", models.TextField()),
-                ("summary", models.TextField()),
-                ("image", models.ImageField(blank=True, upload_to="")),
+                ("name", models.CharField(max_length=150)),
                 (
-                    "is_public",
-                    models.BooleanField(
-                        default=True,
-                        help_text="Does this reivew allow public?",
-                        verbose_name="is Public?",
-                    ),
+                    "books",
+                    models.ManyToManyField(related_name="liked", to="books.book"),
                 ),
             ],
             options={

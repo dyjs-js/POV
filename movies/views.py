@@ -1,35 +1,50 @@
-from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.status import HTTP_204_NO_CONTENT
-
+from rest_framework.exceptions import (
+    NotFound,
+    NotAuthenticated,
+    PermissionDenied,
+)
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .models import Movie
-from .serializers import MovieSerializer
+from .serializers import MovieListSerializer, MovieDetailSerializer
+from liked.serializers import LikedSerializer
+from medias.serializers import PhotoSerializer
 
 # Create your views here.
 
 
 class Movies(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     def get(self, request):
         all_movies = Movie.objects.all()
-        serializer = MovieSerializer(
+        serializer = MovieListSerializer(
             all_movies,
             many=True,
+            context={"request": request},
         )
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = MovieSerializer(data=request.data)
+        serializer = MovieDetailSerializer(
+            data=request.data,
+            context={"request": request},
+        )
         if serializer.is_valid():
             new_movie = serializer.save()
+            serializer = MovieDetailSerializer(new_movie)
             return Response(
-                MovieSerializer(new_movie).data,
+                serializer.data,
             )
         else:
             return Response(serializer.errors)
 
 
 class MovieDetail(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     def get_object(self, pk):
         try:
             return Movie.objects.get(pk=pk)
@@ -38,25 +53,84 @@ class MovieDetail(APIView):
 
     def get(self, request, pk):
         movie = self.get_object(pk)
-        serializer = MovieSerializer(movie)
+        serializer = MovieDetailSerializer(
+            movie,
+            context={"request": request},
+        )
         return Response(serializer.data)
 
     def put(self, request, pk):
         movie = self.get_object(pk)
-        serializer = MovieSerializer(
+        if movie.user != request.user:
+            raise PermissionDenied
+        serializer = MovieDetailSerializer(
             movie,
             data=request.data,
             partial=True,
         )
         if serializer.is_valid():
             updated_movie = serializer.save()
+            serializer = MovieDetailSerializer(
+                updated_movie,
+                context={"request": request},
+            )
             return Response(
-                MovieSerializer(updated_movie).data,
+                serializer.data,
             )
         else:
             return Response(serializer.errors)
 
     def delete(self, request, pk):
         movie = self.get_object(pk)
+        if movie.user != request.user:
+            raise PermissionDenied
         movie.delete()
         return Response(status=HTTP_204_NO_CONTENT)
+
+
+class MovieLiked(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_object(self, pk):
+        try:
+            return Movie.objects.get(pk=pk)
+        except Movie.DoesNotExist:
+            raise NotFound
+
+    def get(self, request, pk):
+        try:
+            page = request.query_params.get("page", 1)
+            page = int(page)
+        except ValueError:
+            page = 1
+        page_size = 3
+        start = (page - 1) * page_size
+        end = start + page_size
+        room = self.get_object(pk)
+        serializer = LikedSerializer(
+            room.liked.all()[start:end],
+            many=True,
+        )
+        return Response(serializer.data)
+
+
+class MoviePhotos(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_object(self, pk):
+        try:
+            return Movie.objects.get(pk=pk)
+        except Movie.DoesNotExist:
+            raise NotFound
+
+    def post(self, request, pk):
+        movie = self.get_object(pk)
+        if request.user != movie.user:
+            raise PermissionDenied
+        serializer = PhotoSerializer(data=request.data)
+        if serializer.is_valid():
+            photo = serializer.save(movie=movie)
+            serializer = PhotoSerializer(photo)
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors)

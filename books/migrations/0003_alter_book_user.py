@@ -7,17 +7,17 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("movies", "0003_alter_movie_user"),
+        ("books", "0002_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="movie",
+            model_name="book",
             name="user",
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.CASCADE,
-                related_name="movies",
+                related_name="books",
                 to=settings.AUTH_USER_MODEL,
             ),
         ),

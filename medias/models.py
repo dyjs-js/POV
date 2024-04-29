@@ -5,7 +5,7 @@ from common.models import CommonModel
 
 
 class Photo(CommonModel):
-    file = models.ImageField()
+    file = models.URLField()
     description = models.CharField(max_length=140)
     book = models.ForeignKey(
         "books.Book",
@@ -28,7 +28,7 @@ class Photo(CommonModel):
 
 class Video(CommonModel):
 
-    file = models.FileField()
+    file = models.URLField()
     # movie는 한개의 동영상만 가질 수 있음
     movie = models.OneToOneField(
         "movies.Movie",

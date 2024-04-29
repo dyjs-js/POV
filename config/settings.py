@@ -40,6 +40,7 @@ CUSTOM_APPS = [
     "books.apps.BooksConfig",
     "users.apps.UsersConfig",
     "medias.apps.MediasConfig",
+    "liked.apps.LikedConfig",
 ]
 
 
@@ -140,3 +141,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Authe
 AUTH_USER_MODEL = "users.User"
+
+
+MEDIA_ROOT = "uploads"
+
+MEDIA_URL = "user-uploads/"
+
+PAGE_SIZE = 3

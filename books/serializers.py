@@ -1,20 +1,23 @@
 from rest_framework import serializers
 from .models import Book
 from users.serializers import TinyUserSerializer
+from medias.serializers import PhotoSerializer
+from liked.models import Liked
 
 
 class BookListSerializer(serializers.ModelSerializer):
     is_owner = serializers.SerializerMethodField()
+    photos = PhotoSerializer(many=True, read_only=True)
 
     class Meta:
         model = Book
-        # 모든 필드를 보여줌
         fields = (
             "pk",
             "title",
             "author",
             "review_title",
             "is_owner",
+            "photos",
         )
 
     def get_is_owner(self, book):
@@ -25,6 +28,8 @@ class BookListSerializer(serializers.ModelSerializer):
 class BookDetailSerializer(serializers.ModelSerializer):
     user = TinyUserSerializer(read_only=True)
     is_owner = serializers.SerializerMethodField()
+    is_liked = serializers.SerializerMethodField()
+    photos = PhotoSerializer(many=True, read_only=True)
 
     class Meta:
         model = Book
@@ -34,3 +39,10 @@ class BookDetailSerializer(serializers.ModelSerializer):
     def get_is_owner(self, book):
         request = self.context["request"]
         return book.user == request.user
+
+    def get_is_liked(self, book):
+        request = self.context["request"]
+        return Liked.objects.filter(
+            user=request.user,
+            book__pk=book.pk,
+        ).exists()
