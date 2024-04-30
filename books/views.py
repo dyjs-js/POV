@@ -1,6 +1,6 @@
 from django.conf import settings
 from rest_framework.response import Response
-from rest_framework.status import HTTP_204_NO_CONTENT
+from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 from rest_framework.exceptions import (
     NotFound,
@@ -38,7 +38,7 @@ class Books(APIView):
                 serializer.data,
             )
         else:
-            return Response(serializer.errors)
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 
 class BookDetail(APIView):
@@ -77,7 +77,7 @@ class BookDetail(APIView):
                 serializer.data,
             )
         else:
-            return Response(serializer.errors)
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
         book = self.get_object(pk)
@@ -116,6 +116,7 @@ class BookLiked(APIView):
         user = request.user
         book = self.get_object(pk)
         existing_like = book.liked.filter(user=user).first()
+        # 이미 좋아요가 존재한다면 삭제
         if existing_like:
             existing_like.delete()
             return Response(
@@ -131,6 +132,8 @@ class BookLiked(APIView):
             )
             serializer = LikedSerializer(review)
             return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 
 class BookPhotos(APIView):
@@ -152,4 +155,4 @@ class BookPhotos(APIView):
             serializer = PhotoSerializer(photo)
             return Response(serializer.data)
         else:
-            return Response(serializer.errors)
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)

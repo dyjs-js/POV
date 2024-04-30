@@ -7,6 +7,7 @@ from liked.models import Liked
 
 class BookListSerializer(serializers.ModelSerializer):
     is_owner = serializers.SerializerMethodField()
+    is_liked = serializers.SerializerMethodField()
     photos = PhotoSerializer(many=True, read_only=True)
 
     class Meta:
@@ -17,12 +18,20 @@ class BookListSerializer(serializers.ModelSerializer):
             "author",
             "review_title",
             "is_owner",
+            "is_liked",
             "photos",
         )
 
     def get_is_owner(self, book):
         request = self.context["request"]
         return book.user == request.user
+
+    def get_is_liked(self, book):
+        request = self.context["request"]
+        return Liked.objects.filter(
+            user=request.user,
+            book__pk=book.pk,
+        ).exists()
 
 
 class BookDetailSerializer(serializers.ModelSerializer):

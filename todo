@@ -1,3 +1,4 @@
+1. app 구성 
 - 회원가입 / 로그인 users [v]
     - first name
     - last name
@@ -46,7 +47,7 @@
 - 이미지 생성
 
 
-
+2. todo 
 # view.py => 유저가 특정 url에 접근할때 작동하는 함수
 4월까지 기본 app api까지 완료
 4/29 - liked app 생성 + 나머지 api 완료(users, movies, books, uploads, liked)
@@ -55,10 +56,15 @@
 4/30
 - user 마무리 + 인증 부분 시작
 
+todo 
+- chagpt 요약
+- 이미지 생성
+- api/v1/liked 만들기 .. ? 마이페이지에서 좋아요한 리스트들 보기위해서는 필요
+- 프론트엔드
+- 인증
 
 5월부터 프론트 시작하면서 기타 기능 추가하기
-- liked app 생성
-- photos 업로드를 위한 api view
+
 
 
 "api를 사용 하는 이유

@@ -1,9 +1,8 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.status import HTTP_204_NO_CONTENT
+from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST
 from rest_framework.exceptions import (
     NotFound,
-    NotAuthenticated,
     PermissionDenied,
 )
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -39,7 +38,7 @@ class Movies(APIView):
                 serializer.data,
             )
         else:
-            return Response(serializer.errors)
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 
 class MovieDetail(APIView):
@@ -113,6 +112,29 @@ class MovieLiked(APIView):
         )
         return Response(serializer.data)
 
+    def post(self, request, pk):
+        user = request.user
+        movie = self.get_object(pk)
+        existing_like = movie.liked.filter(user=user).first()
+        # 이미 좋아요가 존재한다면 삭제
+        if existing_like:
+            existing_like.delete()
+            return Response(
+                {"message": "Your like has been removed."},
+                status=HTTP_204_NO_CONTENT,
+            )
+
+        serializer = LikedSerializer(data=request.data)
+        if serializer.is_valid():
+            review = serializer.save(
+                user=request.user,
+                movie=self.get_object(pk),
+            )
+            serializer = LikedSerializer(review)
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
 
 class MoviePhotos(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -133,4 +155,4 @@ class MoviePhotos(APIView):
             serializer = PhotoSerializer(photo)
             return Response(serializer.data)
         else:
-            return Response(serializer.errors)
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
