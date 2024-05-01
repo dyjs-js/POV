@@ -8,6 +8,7 @@ from liked.models import Liked
 class MovieListSerializer(serializers.ModelSerializer):
     is_owner = serializers.SerializerMethodField()
     is_liked = serializers.SerializerMethodField()
+    is_liked_count = serializers.SerializerMethodField()
     photos = PhotoSerializer(many=True, read_only=True)
 
     class Meta:
@@ -19,6 +20,7 @@ class MovieListSerializer(serializers.ModelSerializer):
             "director",
             "is_owner",
             "is_liked",
+            "is_liked_count",
             "photos",
         )
 
@@ -33,11 +35,18 @@ class MovieListSerializer(serializers.ModelSerializer):
             movie__pk=movie.pk,
         ).exists()
 
+    def get_is_liked_count(self, movie):
+        return Liked.objects.filter(
+            movie__pk=movie.pk,
+        ).count()
+
 
 class MovieDetailSerializer(serializers.ModelSerializer):
     user = TinyUserSerializer(read_only=True)
     is_owner = serializers.SerializerMethodField()
     is_liked = serializers.SerializerMethodField()
+    is_liked_count = serializers.SerializerMethodField()
+
     photos = PhotoSerializer(many=True, read_only=True)
 
     class Meta:
@@ -54,3 +63,8 @@ class MovieDetailSerializer(serializers.ModelSerializer):
             user=request.user,
             movie__pk=movie.pk,
         ).exists()
+
+    def get_is_liked_count(self, movie):
+        return Liked.objects.filter(
+            movie__pk=movie.pk,
+        ).count()

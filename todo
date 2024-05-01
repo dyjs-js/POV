@@ -43,7 +43,14 @@
     - movies FK
     - user FK
 
-- chatgpt요약
+- chatgpt요약(GptSurmmary)
+    - pk 
+    - user FK
+    - book FK
+    - movie FK
+    - summary_source (요약을 원하는 내용)
+    - summarized_text(gpt를 통해서 요약된 내용)
+--> 여기에서 요약을 생성해서 movie 혹은 book에서 출력할 예정
 - 이미지 생성
 
 
@@ -54,14 +61,18 @@
 
 
 4/30
-- user 마무리 + 인증 부분 시작
+- user 마무리 + 인증 완료 + test 코드 작성 
+
+5/1 
+- liked count 함수 작성
+- 
 
 todo 
 - chagpt 요약
 - 이미지 생성
 - api/v1/liked 만들기 .. ? 마이페이지에서 좋아요한 리스트들 보기위해서는 필요
 - 프론트엔드
-- 인증
+- 인증 [v]
 
 5월부터 프론트 시작하면서 기타 기능 추가하기
 

@@ -8,6 +8,7 @@ from liked.models import Liked
 class BookListSerializer(serializers.ModelSerializer):
     is_owner = serializers.SerializerMethodField()
     is_liked = serializers.SerializerMethodField()
+    is_liked_count = serializers.SerializerMethodField()
     photos = PhotoSerializer(many=True, read_only=True)
 
     class Meta:
@@ -19,6 +20,7 @@ class BookListSerializer(serializers.ModelSerializer):
             "review_title",
             "is_owner",
             "is_liked",
+            "is_liked_count",
             "photos",
         )
 
@@ -33,11 +35,18 @@ class BookListSerializer(serializers.ModelSerializer):
             book__pk=book.pk,
         ).exists()
 
+    def get_is_liked_count(self, book):
+        return Liked.objects.filter(
+            book__pk=book.pk,
+        ).count()
+
 
 class BookDetailSerializer(serializers.ModelSerializer):
     user = TinyUserSerializer(read_only=True)
     is_owner = serializers.SerializerMethodField()
     is_liked = serializers.SerializerMethodField()
+    is_liked_count = serializers.SerializerMethodField()
+
     photos = PhotoSerializer(many=True, read_only=True)
 
     class Meta:
@@ -55,3 +64,8 @@ class BookDetailSerializer(serializers.ModelSerializer):
             user=request.user,
             book__pk=book.pk,
         ).exists()
+
+    def get_is_liked_count(self, book):
+        return Liked.objects.filter(
+            book__pk=book.pk,
+        ).count()
