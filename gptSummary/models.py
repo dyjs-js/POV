@@ -13,7 +13,7 @@ from common.models import CommonModel
 # - 이미지 생성
 
 
-class GptSurmmaryModel(CommonModel):
+class GptSummaryModel(CommonModel):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,

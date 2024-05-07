@@ -34,6 +34,7 @@ class Movie(CommonModel):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="movies",
+        null=True,
     )
 
     def __str__(self):

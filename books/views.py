@@ -1,3 +1,5 @@
+import time
+
 from django.conf import settings
 from rest_framework.response import Response
 from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST
@@ -27,13 +29,17 @@ class Books(APIView):
         return Response(serializer.data)
 
     def post(self, request):
+        print(dir(request.user))
         serializer = BookDetailSerializer(
             data=request.data,
             context={"request": request},
         )
         if serializer.is_valid():
-            new_book = serializer.save()
-            serializer = BookDetailSerializer(new_book)
+            new_book = serializer.save(user=request.user)
+            serializer = BookDetailSerializer(
+                new_book,
+                context={"request": request},
+            )
             return Response(
                 serializer.data,
             )
@@ -51,6 +57,7 @@ class BookDetail(APIView):
             raise NotFound
 
     def get(self, request, pk):
+        time.sleep(1)
         book = self.get_object(pk)
         serializer = BookDetailSerializer(
             book,

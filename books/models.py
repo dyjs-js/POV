@@ -36,6 +36,7 @@ class Book(CommonModel):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="books",
+        null=True,
     )
 
     def __str__(self):

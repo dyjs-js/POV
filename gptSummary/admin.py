@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import GptSummaryModel
 
-# Register your models here.
+
+@admin.register(GptSummaryModel)
+class GptSummaryAdmin(admin.ModelAdmin):
+    pass

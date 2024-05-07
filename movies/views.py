@@ -32,8 +32,11 @@ class Movies(APIView):
             context={"request": request},
         )
         if serializer.is_valid():
-            new_movie = serializer.save()
-            serializer = MovieDetailSerializer(new_movie)
+            new_movie = serializer.save(user=request.user)
+            serializer = MovieDetailSerializer(
+                new_movie,
+                context={"request": request},
+            )
             return Response(
                 serializer.data,
             )

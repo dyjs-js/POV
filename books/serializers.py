@@ -22,18 +22,24 @@ class BookListSerializer(serializers.ModelSerializer):
             "is_liked",
             "is_liked_count",
             "photos",
+            "is_public",
         )
 
     def get_is_owner(self, book):
         request = self.context["request"]
-        return book.user == request.user
+        if request:
+            return book.user == request.user
+        return False
 
     def get_is_liked(self, book):
         request = self.context["request"]
-        return Liked.objects.filter(
-            user=request.user,
-            book__pk=book.pk,
-        ).exists()
+        if request:
+            if request.user.is_authenticated:
+                return Liked.objects.filter(
+                    user=request.user,
+                    book__pk=book.pk,
+                ).exists()
+        return False
 
     def get_is_liked_count(self, book):
         return Liked.objects.filter(
@@ -56,14 +62,19 @@ class BookDetailSerializer(serializers.ModelSerializer):
 
     def get_is_owner(self, book):
         request = self.context["request"]
-        return book.user == request.user
+        if request:
+            return book.user == request.user
+        return False
 
     def get_is_liked(self, book):
         request = self.context["request"]
-        return Liked.objects.filter(
-            user=request.user,
-            book__pk=book.pk,
-        ).exists()
+        if request:
+            if request.user.is_authenticated:
+                return Liked.objects.filter(
+                    user=request.user,
+                    book__pk=book.pk,
+                ).exists()
+        return False
 
     def get_is_liked_count(self, book):
         return Liked.objects.filter(

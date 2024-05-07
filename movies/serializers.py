@@ -30,10 +30,11 @@ class MovieListSerializer(serializers.ModelSerializer):
 
     def get_is_liked(self, movie):
         request = self.context["request"]
-        return Liked.objects.filter(
-            user=request.user,
-            movie__pk=movie.pk,
-        ).exists()
+        if request.user.is_authenticated:
+            return Liked.objects.filter(
+                user=request.user,
+                movie__pk=movie.pk,
+            ).exists()
 
     def get_is_liked_count(self, movie):
         return Liked.objects.filter(
@@ -59,10 +60,11 @@ class MovieDetailSerializer(serializers.ModelSerializer):
 
     def get_is_liked(self, movie):
         request = self.context["request"]
-        return Liked.objects.filter(
-            user=request.user,
-            movie__pk=movie.pk,
-        ).exists()
+        if request.user.is_authenticated:
+            return Liked.objects.filter(
+                user=request.user,
+                movie__pk=movie.pk,
+            ).exists()
 
     def get_is_liked_count(self, movie):
         return Liked.objects.filter(
