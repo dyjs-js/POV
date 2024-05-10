@@ -18,6 +18,7 @@ class BookListSerializer(serializers.ModelSerializer):
             "title",
             "author",
             "review_title",
+            "rating",
             "is_owner",
             "is_liked",
             "is_liked_count",

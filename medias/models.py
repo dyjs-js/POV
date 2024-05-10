@@ -6,7 +6,11 @@ from common.models import CommonModel
 
 class Photo(CommonModel):
     file = models.URLField()
-    description = models.CharField(max_length=140)
+    description = models.CharField(
+        max_length=140,
+        null=True,
+        blank=True,
+    )
     book = models.ForeignKey(
         "books.Book",
         on_delete=models.CASCADE,

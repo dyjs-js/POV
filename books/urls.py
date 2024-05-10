@@ -6,4 +6,5 @@ urlpatterns = [
     path("<int:pk>", views.BookDetail.as_view()),
     path("<int:pk>/liked", views.BookLiked.as_view()),
     path("<int:pk>/photos", views.BookPhotos.as_view()),
+    path("<int:pk>/gptphotos", views.BookGptPhotos.as_view()),
 ]

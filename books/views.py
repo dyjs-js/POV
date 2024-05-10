@@ -1,5 +1,8 @@
 import time
-
+import os
+from pathlib import Path
+from openai import OpenAI
+import environ
 from django.conf import settings
 from rest_framework.response import Response
 from rest_framework.status import HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST
@@ -13,6 +16,7 @@ from .models import Book
 from .serializers import BookListSerializer, BookDetailSerializer
 from liked.serializers import LikedSerializer
 from medias.serializers import PhotoSerializer
+from gptCreate.serializers import GptPhotoSerializer
 
 
 class Books(APIView):
@@ -160,6 +164,54 @@ class BookPhotos(APIView):
         if serializer.is_valid():
             photo = serializer.save(book=book)
             serializer = PhotoSerializer(photo)
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+
+# open ai api key 설정을 위한 세팅
+env = environ.Env()
+BASE_DIR = Path(__file__).resolve().parent.parent
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+api_key = env("OPENAI_API_KEY")
+
+client = OpenAI(api_key=api_key)
+# Create your views here.
+
+
+class BookGptPhotos(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_completion(self, prompt):
+        query = client.images.generate(
+            model="dall-e-3",
+            prompt=prompt,
+            n=1,
+            size="1024x1024",
+        )
+        response = query.data[0].url
+        return response
+
+    def get_object(self, pk):
+        try:
+            return Book.objects.get(pk=pk)
+        except Book.DoesNotExist:
+            raise NotFound
+
+    def post(self, request, pk):
+        book = self.get_object(pk)
+        if request.user != book.user:
+            raise PermissionDenied
+
+        prompt = f"Book: {book.title}, Author: {book.author}, context: {book.content}"
+        file_url = self.get_completion(prompt)
+        file_url = f"{file_url}"
+        data = {"file": file_url}
+        serializer = GptPhotoSerializer(data=data)
+        print(data)
+        if serializer.is_valid():
+            gptphoto = serializer.save(book=book)
+            serializer = GptPhotoSerializer(gptphoto)
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)

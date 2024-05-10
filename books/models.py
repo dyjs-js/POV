@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from common.models import CommonModel
+from django.core.validators import MaxValueValidator
 
 # Create your models here.
 
@@ -38,6 +39,10 @@ class Book(CommonModel):
         related_name="books",
         null=True,
     )
+    rating = models.PositiveIntegerField(
+        validators=[MaxValueValidator(5)],
+        null=True,
+    )  # 최대 별점 5로 설정
 
     def __str__(self):
         return self.review_title

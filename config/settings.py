@@ -47,7 +47,7 @@ CUSTOM_APPS = [
     "users.apps.UsersConfig",
     "medias.apps.MediasConfig",
     "liked.apps.LikedConfig",
-    "gptSummary.apps.GptsummaryConfig",
+    "gptCreate.apps.GptcreateConfig",
 ]
 
 

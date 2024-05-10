@@ -11,6 +11,7 @@ class BookAdmin(admin.ModelAdmin):
         "author",
         "user",
         "is_public",
+        "rating",
         "created_at",
         "updated_at",
     )
