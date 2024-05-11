@@ -24,6 +24,7 @@ class BookListSerializer(serializers.ModelSerializer):
             "is_liked_count",
             "photos",
             "is_public",
+            "rating",
         )
 
     def get_is_owner(self, book):

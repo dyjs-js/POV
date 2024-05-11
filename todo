@@ -43,15 +43,10 @@
     - movies FK
     - user FK
 
-- chatgpt요약(GptSurmmary)
-    - pk 
-    - user FK
+- gpt create (내가 쓴 리뷰와 책을 바탕으로 이미지 생성)
+    - file
     - book FK
     - movie FK
-    - summary_source (요약을 원하는 내용)
-    - summarized_text(gpt를 통해서 요약된 내용)
---> 여기에서 요약을 생성해서 movie 혹은 book에서 출력할 예정
-- 이미지 생성
 
 
 2. todo 
@@ -68,10 +63,12 @@
 - cgpt summary 앱 생성
 
 todo 
-- chagpt 요약 []
-- 이미지 생성 []
-- 프론트엔드 [진행중. ..]
 - 인증 [v]
+- chagpt 요약 [X] - 이미지생성을 할때는 최대한 자세한 내용이 있으면 좋기 때문에 굳이 요약을 할 필요를 못느낌..
+                나중에 자동 해시태그로 다시 시도해보기로함
+- 이미지 생성 [V] 5/11
+
+- 프론트엔드 [진행중. ..]
 - sign up url만들기 [] 
 추가로 하면 좋을 것
 - api/v1/liked 만들기 .. ? 마이페이지에서 좋아요한 리스트들 보기위해서는 필요
@@ -81,3 +78,6 @@ todo
 
 5/5 
 - gpt test 코드 작성 -- > 요약 및 이미지 생성은 가능한데, 키워드 생성 + 이미지로 가는게 낫지 않을까 생각...
+
+5/11
+- gpt를 이용한 이미지 생성. prompt는 title , author, content
