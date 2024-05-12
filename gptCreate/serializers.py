@@ -3,7 +3,9 @@ from .models import GptPhoto
 
 
 class GptPhotoSerializer(ModelSerializer):
-
     class Meta:
         model = GptPhoto
-        fields = "__all__"
+        fields = (
+            "pk",
+            "file",
+        )

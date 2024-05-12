@@ -176,12 +176,19 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 api_key = env("OPENAI_API_KEY")
 
 client = OpenAI(api_key=api_key)
-# Create your views here.
 
 
 class BookGptPhotos(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
+    def get_object(self, pk):
+        try:
+            return Book.objects.get(pk=pk)
+        except Book.DoesNotExist:
+            raise NotFound
+
+    # pompt를 사용하여 이미지 생성 모델에 요청을 보내고, 응답으로 받은
+    # 이미지 url을 반환
     def get_completion(self, prompt):
         query = client.images.generate(
             model="dall-e-3",
@@ -191,12 +198,6 @@ class BookGptPhotos(APIView):
         )
         response = query.data[0].url
         return response
-
-    def get_object(self, pk):
-        try:
-            return Book.objects.get(pk=pk)
-        except Book.DoesNotExist:
-            raise NotFound
 
     def post(self, request, pk):
         book = self.get_object(pk)

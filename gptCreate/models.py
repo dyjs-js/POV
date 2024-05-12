@@ -1,5 +1,4 @@
 from django.db import models
-from django.conf import settings
 from common.models import CommonModel
 
 
@@ -9,15 +8,15 @@ class GptPhoto(CommonModel):
 
     book = models.ForeignKey(
         "books.Book",
+        on_delete=models.CASCADE,
         null=True,
         blank=True,
-        on_delete=models.CASCADE,
-        related_name="gptPhotos",
+        related_name="gptphotos",
     )
     movie = models.ForeignKey(
         "movies.Movie",
+        on_delete=models.CASCADE,
         null=True,
         blank=True,
-        on_delete=models.CASCADE,
-        related_name="gptPhotos",
+        related_name="gptphotos",
     )

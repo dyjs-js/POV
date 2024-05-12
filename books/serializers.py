@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Book
 from users.serializers import TinyUserSerializer
 from medias.serializers import PhotoSerializer
+from gptCreate.serializers import GptPhotoSerializer
 from liked.models import Liked
 
 
@@ -56,6 +57,7 @@ class BookDetailSerializer(serializers.ModelSerializer):
     is_liked_count = serializers.SerializerMethodField()
 
     photos = PhotoSerializer(many=True, read_only=True)
+    gptphotos = GptPhotoSerializer(many=True, read_only=True)
 
     class Meta:
         model = Book

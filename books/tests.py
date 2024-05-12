@@ -1,5 +1,7 @@
 from rest_framework.test import APITestCase
 from users.models import User
+from gptCreate.models import GptPhoto
+from .serializers import GptPhotoSerializer
 
 # Create your tests here.
 
@@ -23,3 +25,14 @@ class TestBooks(APITestCase):
         )
         response = self.client.post("/api/v1/books/")
         print(response.json())
+
+
+class GptPhotoSerializerTest(APITestCase):
+
+    def setUp(self):
+        # 테스트 데이터 생성
+        self.gpt_photo = GptPhoto.objects.create(file="example.jpg")
+        self.serializer = GptPhotoSerializer(instance=self.gpt_photo)
+
+    def test_gpt_photo_serializer_output(self):
+        print(self.serializer.data)
