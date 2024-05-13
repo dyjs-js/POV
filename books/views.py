@@ -204,7 +204,7 @@ class BookGptPhotos(APIView):
         if request.user != book.user:
             raise PermissionDenied
 
-        prompt = f"Book: {book.title}, Author: {book.author}, context: {book.content}"
+        prompt = f"{book.title}, {book.author}, context: {book.content}"
         file_url = self.get_completion(prompt)
         file_url = f"{file_url}"
         data = {"file": file_url}
