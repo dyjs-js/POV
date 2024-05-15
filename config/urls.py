@@ -9,4 +9,5 @@ urlpatterns = [
     path("api/v1/movies/", include("movies.urls")),
     path("api/v1/medias/", include("medias.urls")),
     path("api/v1/users/", include("users.urls")),
+    path("api/v1/gptcreate/", include("gptCreate.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
