@@ -2,10 +2,11 @@ import requests
 from django.conf import settings
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
-from rest_framework.status import HTTP_200_OK
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, PermissionDenied
 from .models import GptPhoto
+from .serializers import GptPhotoSerializer
 
 
 class GPTPhotoDetail(APIView):
@@ -18,13 +19,42 @@ class GPTPhotoDetail(APIView):
         except GptPhoto.DoesNotExist:
             raise NotFound
 
+    def get(self, request, pk):
+        gptPhoto = self.get_object(pk)
+        serializer = GptPhotoSerializer(
+            gptPhoto,
+            context={"request": request},
+        )
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        gptPhoto = self.get_object(pk)
+        if gptPhoto.user != request.user:
+            raise PermissionDenied
+        serializer = GptPhotoSerializer(
+            gptPhoto,
+            data=request.data,
+            partial=True,  # 일부만 수정 가능
+        )
+        if serializer.is_valid():
+            updated_gptPhoto = serializer.save()
+            serializer = GptPhotoSerializer(
+                updated_gptPhoto,
+                context={"request": request},
+            )
+            return Response(
+                serializer.data,
+            )
+        else:
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
     def delete(self, request, pk):
-        GptPhoto = self.get_object(pk)
-        if (GptPhoto.book and GptPhoto.book.user != request.user) or (
-            GptPhoto.movie and GptPhoto.movie.user != request.user
+        gptPhoto = self.get_object(pk)
+        if (gptPhoto.book and gptPhoto.book.user != request.user) or (
+            gptPhoto.movie and gptPhoto.movie.user != request.user
         ):
             raise PermissionDenied
-        GptPhoto.delete()
+        gptPhoto.delete()
         return Response(status=HTTP_200_OK)
 
 

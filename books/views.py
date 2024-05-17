@@ -61,7 +61,7 @@ class BookDetail(APIView):
             raise NotFound
 
     def get(self, request, pk):
-        time.sleep(1)
+        time.sleep(1)  # ui 테스트를 위한 slepp
         book = self.get_object(pk)
         serializer = BookDetailSerializer(
             book,
@@ -209,7 +209,6 @@ class BookGptPhotos(APIView):
         file_url = f"{file_url}"
         data = {"file": file_url}
         serializer = GptPhotoSerializer(data=data)
-        print(data)
         if serializer.is_valid():
             gptphoto = serializer.save(book=book)
             serializer = GptPhotoSerializer(gptphoto)
