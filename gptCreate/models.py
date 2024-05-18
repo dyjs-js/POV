@@ -28,3 +28,28 @@ class GptPhoto(CommonModel):
         related_name="gptphotos",
         null=True,
     )
+
+
+class GptHashtag(CommonModel):
+    generated_hashtags = models.TextField()
+
+    book = models.ForeignKey(
+        "books.Book",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="hashtags",
+    )
+    movie = models.ForeignKey(
+        "movies.Movie",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="hashtags",
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="hashtags",
+        null=True,
+    )

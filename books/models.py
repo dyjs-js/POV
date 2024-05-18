@@ -25,7 +25,7 @@ class Book(CommonModel):
     )
     content = models.TextField()
 
-    summary = models.TextField()
+    summary = models.TextField(blank=True, null=True)
     image = models.ImageField(blank=True)
     is_public = models.BooleanField(
         verbose_name="is Public?",
