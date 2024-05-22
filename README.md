@@ -5,6 +5,7 @@
 - 나만의 책과 영화를 리뷰하고 공유할 수 있는 플랫폼
 - 작성한 리뷰에 대한 인공지능 생성 이미지 제공 (Open AI dall-e-3 이용 )
 - chatgpt를 이용한 리뷰 요약 서비스 (Open AI API 활용) - 진행중
+- 시연 영상 https://www.youtube.com/watch?v=GQhXLs3h9OI
 
 ## 기술 스택
 
